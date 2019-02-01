@@ -1,0 +1,22 @@
+extends layout
+
+block content
+  h1= "Forms"
+  p This is the forms page
+
+  form(action='/submitpage', method='GET')
+    p
+      | Name: 
+      br
+      input(type='text', name='name', value='')
+      br
+      |          Email: 
+      br
+      input(type='text', name='email', value='')
+      br
+      |          Comments: 
+      br
+      textarea(type='text', name='comments', value='')
+    input(type='submit', value='Submit')
+
+  br

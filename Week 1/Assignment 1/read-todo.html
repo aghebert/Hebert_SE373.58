@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>TODO supply a title</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+    <div>TODO write content</div>
+
+    <script type="text/javascript">
+        let myRequest = 'http://localhost:5500/todo'
+
+        fetch(myRequest)
+            .then(function (response) {
+
+                return response.json()
+            })
+            .then(function (json) {
+                console.log(json)
+                console.log(json.length)
+
+                document.writeln('<h1>This is an object</h1>');
+                var htmlbuild = '';
+                htmlbuild += "<ol>";
+                for (var key in json) {
+                    name = key;
+                    value = json[key].toString();
+                    
+                    htmlbuild += "<li>Title: " + json[key].title;
+                    htmlbuild += "<ul><li>Completed: " + json[key].completed + "</li>";
+                    htmlbuild += "<li>ID: " + json[key].id + "</li>";
+                    htmlbuild += "<li>User ID: " + json[key].userId + "</li></ul></li>";
+                }
+                htmlbuild += "</ol>";
+                document.writeln(htmlbuild);
+                /*
+                for (var key in json) {
+                    if (json.hasOwnProperty(key)) {
+                        console.log(key + " -> " + json[key]);
+                    }
+                }
+                */
+
+            })
+    </script>
+
+</body>
+
+</html>
