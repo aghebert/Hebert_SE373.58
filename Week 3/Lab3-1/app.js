@@ -4,7 +4,8 @@ var hbs = require('hbs');
 var app = express();
 
 app.set('view engine', 'hbs');
-hbs.registerPartials(__dirname + '/views/partials');
+app.set('views', __dirname + '/views');
+//hbs.registerPartials(__dirname + '/views/partials');
 app.use(express.static(__dirname + '/public'));
 app.use(express.urlencoded({
   extended: false
@@ -21,15 +22,15 @@ function randomColorValue() {
 }
 
 //middleware
-app.get('/grid', (req, res) => {
+app.get('/form', function (req, res) {
   //res.locals.gridSize = req.params.gridSize;
   console.log("step 'form'");
-  res.render('form.hbs')
+  res.render('form.hbs', {title:"Form Input"})
 });
 
 
-app.post('/grid', (req, res) => {
-  //res.locals.gridSize = req.params.gridSize;
+app.post('/grid/:gridSize', function (req, res) {
+  res.locals.gridSize = req.params.gridSize;
   console.log("step 'Size'");
   res.render("grid.hbs", {gridSize: req.body.gridSize })//req.body."name of form field ('gridSize')"});
 })
