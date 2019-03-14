@@ -6,10 +6,13 @@ var hbs = require('hbs');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  res.render('index', { title: 'Express' }, function(){
+    allEmployees();
+    
+  });
 
-  allEmployees();
-});
+
+})
 
 /* GET home page. */
 router.get('/create', function(req, res, next) {
@@ -47,6 +50,7 @@ var employeeSchema = new Schema({
 });
 
 
+
 var Employee = mongoose.model('Employee', employeeSchema);
 
 function create(vfirstName, vlastName, vdepartment, vstartDate, vjobTitle, vsalary) {
@@ -70,17 +74,19 @@ function create(vfirstName, vlastName, vdepartment, vstartDate, vjobTitle, vsala
 
 function allEmployees(){
 Employee.find({}, function(err, employees) {
-  if (err) throw err;
+  
 
-  // object of all the users
+for (var employee in employees){
+  console.log(employees[employee].get("firstName"))
+}
+return employees;
+})
 
-  return employees
-});
 }
 
 hbs.registerHelper('empList', function() {
-  console.log(allEmployees);
-  list = allEmployees();
+  
+  list = "<h1>HELLO!</h1>";
 return list;
 })
 
