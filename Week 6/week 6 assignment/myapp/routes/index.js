@@ -5,90 +5,86 @@ var hbs = require('hbs');
 
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' }, function(){
-    allEmployees();
-    
-  });
+router.get('/', function (req, res, next) {
+      res.render('index', {
+        title: 'Express'})
+        
+      });
 
+      /* GET home page. */
+      router.get('/create', function (req, res, next) {
+        res.render('index', {
+          title: 'Express'
+        });
+        var firstName = req.query.firstName;
+        var lastName = req.query.lastName;
+        var department = req.query.department;
+        var startDate = req.query.startDate;
+        var jobTitle = req.query.jobTitle;
+        var salary = req.query.salary;
 
-})
+        create(firstName, lastName, department, startDate, jobTitle, salary);
 
-/* GET home page. */
-router.get('/create', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-  var firstName = req.query.firstName;
-  var lastName = req.query.lastName;
-  var department = req.query.department;
-  var startDate = req.query.startDate;
-  var jobTitle = req.query.jobTitle;
-  var salary = req.query.salary;
+      });
 
-  create(firstName, lastName, department, startDate, jobTitle, salary);
-
-});
-
-mongoose.connect('mongodb://localhost/MongooseCRUD', { useNewUrlParser: true });
-
-
-
-// grab the things we need
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
-
-// create a schema
-var employeeSchema = new Schema({
-  firstName: String,
-  lastName: String,
-  department: String,
-  startDate: {
-    type: Date,
-    default: Date.now
-  },
-  jobTitle: String,
-  salary: Number
-});
+      mongoose.connect('mongodb://localhost/MongooseCRUD', {
+        useNewUrlParser: true
+      });
 
 
 
-var Employee = mongoose.model('Employee', employeeSchema);
+      // grab the things we need
+      var mongoose = require('mongoose');
+      var Schema = mongoose.Schema;
 
-function create(vfirstName, vlastName, vdepartment, vstartDate, vjobTitle, vsalary) {
-  var newEmployee = Employee({
-    firstName: vfirstName,
-    lastName: vlastName,
-    department: vdepartment,
-    startDate: vstartDate,
-    jobTitle: vjobTitle,
-    salary: vsalary
-  });
-
-  newEmployee.save(function(err) {
-    if (err) throw err;
-  
-    console.log('User created!');
-
-  });
-}
+      // create a schema
+      var employeeSchema = new Schema({
+        firstName: String,
+        lastName: String,
+        department: String,
+        startDate: {
+          type: Date,
+          default: Date.now
+        },
+        jobTitle: String,
+        salary: Number
+      });
 
 
-function allEmployees(){
-Employee.find({}, function(err, employees) {
-  
 
-for (var employee in employees){
-  console.log(employees[employee].get("firstName"))
-}
-return employees;
-})
+      var Employee = mongoose.model('Employee', employeeSchema);
 
-}
+      function create(vfirstName, vlastName, vdepartment, vstartDate, vjobTitle, vsalary) {
+        var newEmployee = Employee({
+          firstName: vfirstName,
+          lastName: vlastName,
+          department: vdepartment,
+          startDate: vstartDate,
+          jobTitle: vjobTitle,
+          salary: vsalary
+        });
 
-hbs.registerHelper('empList', function() {
-  
-  list = "<h1>HELLO!</h1>";
-return list;
-})
+        newEmployee.save(function (err) {
+          if (err) throw err;
+
+          console.log('User created!');
+
+        });
+      }
 
 
-module.exports = router;
+
+      hbs.registerHelper('empList', function () {
+        Employee.find({}, function (err, employees) {
+         
+          
+              for (var employee in employees) {
+                console.log(employees[0].get("firstName"))
+              }
+              
+        })
+
+      })
+
+
+      module.exports = router;
