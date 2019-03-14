@@ -1,0 +1,29 @@
+<h1>{{title}}</h1>
+<p>Welcome to {{title}}</p>
+
+
+<form action="/create">
+    First Name: <br />
+    <input type="text" name="firstName"><br>
+    <br>
+    Last Name: <br>
+    <input type="text" name="lastName"><br>
+    <br>
+    Department: <br>
+    <input type="text" name="department"><br>
+    <br>
+    Start Date <br>
+    <input type="date" name="startDate"><br>
+    <br>
+    Job Title: <br>
+    <input type="text" name="jobTitle"><br>
+    <br>
+    Salary: <br>
+    <input type="number" min="0.01" step="0.01" name="salary" />
+    <br>
+    <br>
+    <input type="submit" value="Submit">
+</form>
+
+
+{{{empList}}}
