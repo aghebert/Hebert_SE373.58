@@ -3,6 +3,7 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var hbs = require('hbs');
 const app = express();
+var dateFormat = require('dateformat');
 
 
 
@@ -26,7 +27,7 @@ router.get('/', function (req, res, next) {
 
     for (var employee in employees) {
       //html += '<form method="POST" id="' + employees[employee].get("_id") +'">'
-      html += '<form method="POST">';
+      html += '<form method="GET">';
       html += employees[employee].get("firstName");
       html += "<br/>";
       html += employees[employee].get("lastName");
@@ -54,19 +55,74 @@ router.get('/', function (req, res, next) {
   })
 });
 
-router.post('/update', function (req, res, next) {
+router.get('/update', function (req, res, next) {
+
+  console.log("update - req.query: " + req.query.id);
+  
+  var id = req.query.id;
+  
+  
+  
+
+  Employee.findById(id, function (err, employee) {
+    console.log(employee)
+    console.log();
+
+    var date = dateFormat(employee.startDate, "yyyy-mm-dd")
+    
+    res.render('update', {
+      title: 'Update Person',
+      id:employee.id,
+      firstName: employee.firstName,
+      lastName: employee.lastName,
+      department: employee.department,
+      startDate: date,
+      jobTitle: employee.jobTitle,
+      salary: employee.salary
+    })
+
+
+  })
+
+
+  
+
+})
+
+router.get('/sendupdate', function (req, res, next) {
+  res.render('index', {
+    title: 'Update Person'
+  })
+  console.log("sendupdate - req.query: " + req.query.id);
+  var id = req.query.id;
+
+  Employee.findById(id, function (err, employee) {
+    
+    employee.firstName = req.query.firstName;
+    employee.lastName = req.query.lastName;
+    employee.department = req.query.department;
+    employee.startDate = req.query.startDate;
+    employee.jobTitle= req.query.jobTitle;
+    employee.salary = req.query.salary;
+    employee.save();
+    
+  })
+  res.redirect('/');
+})
+
+router.get('/delete', function (req, res, next) {
   res.render('index', {
     title: 'Update Person'
   })
   console.log(req.body.id);
   var id = req.param('id');
 
-  Employee.findById(id, function (err, employees) {
-  console.log(employees)
-  })
+  Employee.findByIdAndRemove(id, function () {})
 
-  
+  res.redirect('/');
 })
+
+
 
 
 
@@ -83,6 +139,7 @@ router.get('/create', function (req, res, next) {
 
   create(firstName, lastName, department, startDate, jobTitle, salary);
 
+  res.redirect('/');
 });
 
 mongoose.connect('mongodb://localhost/MongooseCRUD', {
