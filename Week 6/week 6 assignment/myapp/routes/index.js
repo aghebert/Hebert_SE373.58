@@ -8,33 +8,42 @@ var dateFormat = require('dateformat');
 /* GET home page. */
 router.get('/', function (req, res, next) {
   
-  var html = '<div>';
+  var html = '<table>';
+  html += '<th>First Name</th><th>Last Name</th><th>Department</th><th>Start Date</th><th>Job Title</th><th>Salary</th>'
   Employee.find(function (err, employees) {
     for (var employee in employees) {
       html += '<form method="GET">';
+      html += '<tr><td>';
       html += employees[employee].get("firstName");
-      html += "<br/>";
+      html += "</td><td>";
       html += employees[employee].get("lastName");
-      html += "<br/>";
+      html += "</td><td>";
       html += employees[employee].get("department");
-      html += "<br/>";
+      html += "</td><td>";
       html += employees[employee].get("startDate");
-      html += "<br/>";
+      html += "</td><td>";
       html += employees[employee].get("jobTitle");
-      html += "<br/>";
+      html += "</td><td>";
       html += employees[employee].get("salary");
-      html += "<br/>";
+      html += "</td><td>";
       html += '<input type="hidden" name="id" value="' + employees[employee].get("_id") + '" />';
       html += '<input type="submit" value="Update" formaction="update">'
       html += '<input type="submit" value="Delete" formaction="delete">'
       html += '</form>'
-      html += "<br/><br/>";
+      html += "</td><td></tr>";;
     }
-    html += "</div>";
+    html += "</table>";
   }).then(function() {
-    res.render('index', {
-      title: 'Express'
-    })
+    if(req.query.dsuccess == 'true'){
+      res.render('index', {
+        title: 'Employee List', dsuccess: 'Delete Succeeded!'
+      })
+    } else {
+      res.render('index', {
+        title: 'Employee List'
+      })
+    }
+    
   })
 
  
@@ -106,7 +115,7 @@ router.get('/delete', function (req, res, next) {
   var id = req.param('id');
 
   Employee.findByIdAndRemove(id, function () {}).then(function(){
-    res.redirect('/');
+    res.redirect('/?dsuccess=true');
   })
 
   
