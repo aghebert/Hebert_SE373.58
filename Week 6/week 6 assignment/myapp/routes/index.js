@@ -5,28 +5,12 @@ var hbs = require('hbs');
 const app = express();
 var dateFormat = require('dateformat');
 
-
-
 /* GET home page. */
 router.get('/', function (req, res, next) {
-  res.render('index', {
-    title: 'Express'
-  })
-  var html = '<div>'
-  /*
-  var employees = Employee.find({}, function (err, employees) {
-    return employees;
-  })
-  */
+  
+  var html = '<div>';
   Employee.find(function (err, employees) {
-    //return JSON.stringify(employees);
-
-
-    //console.log(employees)
-
-
     for (var employee in employees) {
-      //html += '<form method="POST" id="' + employees[employee].get("_id") +'">'
       html += '<form method="GET">';
       html += employees[employee].get("firstName");
       html += "<br/>";
@@ -47,8 +31,13 @@ router.get('/', function (req, res, next) {
       html += "<br/><br/>";
     }
     html += "</div>";
-    //res.write(html);
-  });
+  }).then(function() {
+    res.render('index', {
+      title: 'Express'
+    })
+  })
+
+ 
 
   hbs.registerHelper('empList', function () {
     return html;
@@ -60,9 +49,6 @@ router.get('/update', function (req, res, next) {
   console.log("update - req.query: " + req.query.id);
   
   var id = req.query.id;
-  
-  
-  
 
   Employee.findById(id, function (err, employee) {
     console.log(employee)
@@ -106,20 +92,24 @@ router.get('/sendupdate', function (req, res, next) {
     employee.salary = req.query.salary;
     employee.save();
     
+  }).then(function(){
+    res.redirect('/');
   })
-  res.redirect('/');
+  
 })
 
 router.get('/delete', function (req, res, next) {
   res.render('index', {
-    title: 'Update Person'
+    title: 'Delete Person'
   })
   console.log(req.body.id);
   var id = req.param('id');
 
-  Employee.findByIdAndRemove(id, function () {})
+  Employee.findByIdAndRemove(id, function () {}).then(function(){
+    res.redirect('/');
+  })
 
-  res.redirect('/');
+  
 })
 
 
@@ -148,11 +138,11 @@ mongoose.connect('mongodb://localhost/MongooseCRUD', {
 
 
 
-// grab the things we need
+
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-// create a schema
+
 var employeeSchema = new Schema({
   firstName: String,
   lastName: String,
@@ -186,12 +176,5 @@ function create(vfirstName, vlastName, vdepartment, vstartDate, vjobTitle, vsala
 
   });
 }
-
-
-/*
-hbs.registerHelper('empList', function () {
-  
-})
-*/
 
 module.exports = router;
